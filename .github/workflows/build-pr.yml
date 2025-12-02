@@ -4,18 +4,32 @@ on:
   pull_request:
     branches:
       - main
-  
-env:
-  NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm
         with:
           version: 10
-      - name: Build
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+          cache: "pnpm"
+          scope: "@yurasytnyk"
+          registry-url: "https://npm.pkg.github.com"
+
+      - name: Configure pnpm Auth for private registry
+        run: pnpm config set //npm.pkg.github.com/:_authToken=${{ secrets.NODE_AUTH_TOKEN }}
+
+      - name: Install dependencies
         run: pnpm install
+
+      - name: Build
+        run: pnpm run build
