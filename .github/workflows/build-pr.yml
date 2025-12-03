@@ -20,10 +20,10 @@ jobs:
         with:
           node-version: "lts/*"
           cache: "pnpm"
-          scope: "@yurasytnyk"
+          scope: "@vayapin"
           registry-url: "https://npm.pkg.github.com"
 
       - name: Configure pnpm Auth for private registry
-        run: pnpm config set //npm.pkg.github.com/:_authToken=${{ secrets.NPM_TOKEN }}
+        run: pnpm config set //npm.pkg.github.com/:_authToken=${{ secrets.NPM_GITHUB_TOKEN }}
       - name: Install dependencies
         run: pnpm install
